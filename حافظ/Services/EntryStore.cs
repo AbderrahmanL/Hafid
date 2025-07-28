@@ -10,43 +10,55 @@ namespace حافظ.Services;
 
 public class EntryStore
 {
-    private const string SaveFile = "entries.json";
-    private List<MemorizationEntry> entries = new();
+    private readonly string _filePath = GetSavePath();
+    private readonly List<MemorizationEntry> _entries = new();
 
-    public IReadOnlyList<MemorizationEntry> Entries => entries;
-
-    public void AddEntry(MemorizationEntry entry)
+    private static string GetSavePath()
     {
-        entries.Add(entry);
-        Save();
-    }
+        var folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        var appFolder = Path.Combine(folder, "Hafidh");
 
-    public void RescheduleEntry(MemorizationEntry entry)
-    {
-        entry.Reschedule();
-        Save();
-    }
+        if (!Directory.Exists(appFolder))
+            Directory.CreateDirectory(appFolder);
 
-    public List<MemorizationEntry> GetEntriesDueToday()
-    {
-        return entries
-            .Where(e => e.ScheduledDate.Date == DateTime.Now.Date)
-            .OrderBy(e => e.ScheduledDate)
-            .ToList();
+        return Path.Combine(appFolder, "entries.json");
     }
 
     public void Load()
     {
-        if (File.Exists(SaveFile))
+        if (File.Exists(_filePath))
         {
-            var json = File.ReadAllText(SaveFile);
-            entries = JsonSerializer.Deserialize<List<MemorizationEntry>>(json) ?? new();
+            var json = File.ReadAllText(_filePath);
+            var loaded = JsonSerializer.Deserialize<List<MemorizationEntry>>(json);
+            if (loaded != null)
+                _entries.Clear();
+            _entries.AddRange(loaded);
         }
     }
 
     public void Save()
     {
-        var json = JsonSerializer.Serialize(entries, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(SaveFile, json);
+        var json = JsonSerializer.Serialize(_entries, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(_filePath, json);
     }
-}
+
+    public void AddEntry(MemorizationEntry entry)
+    {
+        _entries.Add(entry);
+        Save();
+    }
+
+    public void RescheduleEntry(MemorizationEntry entry)
+    {
+        entry.Repetitions++;
+        entry.ScheduledDate = DateTime.Now.AddHours(2 * Math.Pow(2, entry.Repetitions));
+        Save();
+    }
+
+    public IEnumerable<MemorizationEntry> GetEntriesDueToday()
+    {
+        var today = DateTime.Today;
+        var tomorrow = today.AddDays(1);
+        return _entries.Where(e => e.ScheduledDate >= today && e.ScheduledDate < tomorrow).OrderBy(e => e.ScheduledDate);
+    }
+} 

@@ -3,7 +3,6 @@ using System.Windows.Input;
 using حافظ.Helpers;
 using حافظ.Models;
 using حافظ.Services;
-using حافظ.Helpers;
 namespace حافظ.ViewModels;
 
 public class AddEntryViewModel : ViewModelBase
@@ -30,7 +29,8 @@ public class AddEntryViewModel : ViewModelBase
         };
 
         _store.AddEntry(entry);
-        _navigateBack();
+        _navigateBack?.Invoke();
     }
 }
+
 

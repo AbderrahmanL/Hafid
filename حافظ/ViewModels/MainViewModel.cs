@@ -1,11 +1,13 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using حافظ.Models;
 using حافظ.Services;
 using حافظ.Helpers;
 using حافظ.Views;
+using static حافظ.App;
 
 namespace حافظ.ViewModels;
 
@@ -14,7 +16,7 @@ public class MainViewModel : ViewModelBase
     private readonly EntryStore _store;
     private readonly Action _navigateToAddEntryView;
 
-    public ObservableCollection<MemorizationEntry> TodayEntries { get; set; } = new();
+    public ObservableCollection<MemorizationEntry> TodayEntries { get; } = new();
 
     public ICommand AddEntryCommand { get; }
     public ICommand RescheduleCommand { get; }
@@ -40,28 +42,8 @@ public class MainViewModel : ViewModelBase
 
     private void OnAddEntry()
     {
-        var addEntryView = new AddEntryView
-        {
-            DataContext = new AddEntryViewModel(_store, NavigateBackToMainView)
-        };
-        if (App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            desktop.MainWindow.Content = addEntryView;
-        }
+        _navigateToAddEntryView?.Invoke();
     }
-
-    private void NavigateBackToMainView()
-    {
-        var mainView = new MainView
-        {
-            DataContext = new MainViewModel(_store, OnAddEntry)
-        };
-        if (App.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            desktop.MainWindow.Content = mainView;
-        }
-    }
-
 
     private void OnReschedule(MemorizationEntry entry)
     {
