@@ -1,0 +1,31 @@
+<!-- MainView.axaml -->
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="https://github.com/avaloniaui"
+    xmlns:vm="clr-namespace:حافظ.ViewModels"
+    xmlns:models="clr-namespace:حافظ.Models"
+    x:Class="حافظ.Views.MainView"
+    x:DataType="vm:MainViewModel">
+
+    <StackPanel Margin="20">
+        <TextBlock Text="Today's Repetitions" FontSize="24" Margin="0 0 0 10"/>
+        <ItemsControl ItemsSource="{Binding TodayEntries}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="models:MemorizationEntry">
+                    <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="8" Padding="10" Margin="0 0 0 10">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Text}" FontSize="16"/>
+                            <TextBlock Text="{Binding ScheduledDate}" FontSize="12"/>
+                            <Button Content="Reschedule"
+                                    Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).RescheduleCommand}"
+                                    CommandParameter="{Binding }" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Button Content="+" Width="50" Height="50" HorizontalAlignment="Right" Command="{Binding AddEntryCommand}" />
+    </StackPanel>
+</UserControl>

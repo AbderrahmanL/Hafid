@@ -1,0 +1,13 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:حافظ.ViewModels"
+    x:Class="حافظ.Views.AddEntryView"
+    x:DataType="vm:AddEntryViewModel">
+
+    <StackPanel Margin="20">
+        <TextBlock Text="New Memorization" FontSize="24" Margin="0 0 0 10"/>
+        <TextBox Text="{Binding EntryText}" AcceptsReturn="True" Height="100"/>
+        <Button Content="Save" Command="{Binding SaveCommand}" Margin="0 10 0 0"/>
+    </StackPanel>
+</UserControl>

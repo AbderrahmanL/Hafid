@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0-ios</TargetFramework>
+        <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
+	<TargetFrameworks>net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+  	<RuntimeIdentifiers>iossimulator-x64;ios-arm64;ios-arm64_x64</RuntimeIdentifiers>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia.iOS"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\حافظ\حافظ.csproj"/>
+    </ItemGroup>
+</Project>
